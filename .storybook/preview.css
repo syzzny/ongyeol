@@ -1,0 +1,4 @@
+/* 사이트에서는 layout.tsx가 넣어 주는 값 — Storybook에서는 layout.tsx가 실행되지 않아 직접 지정 */
+:root {
+  --font-bebas: "Bebas Neue";
+}

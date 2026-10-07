@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { SubmitEvent } from "react";
 import modal from "@/components/Modal/Modal.module.scss";
 import styles from "./CustomerForm.module.scss";
@@ -37,6 +37,9 @@ export default function CustomerForm({
   const [phone, setPhone] = useState(value?.phone ?? "");
   const [agreed, setAgreed] = useState(value !== null);
   const [submitted, setSubmitted] = useState(false); // 확인 버튼을 눌러본 뒤부터 오류 표시
+  const nameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const agreeRef = useRef<HTMLInputElement>(null);
 
   const nameError =
     name.trim().length < 2 ? "이름을 2자 이상 입력해 주세요." : "";
@@ -49,7 +52,12 @@ export default function CustomerForm({
     event.preventDefault();
     setSubmitted(true);
 
-    if (nameError || phoneError || agreeError) return;
+    // 잘못된 항목이 있으면 그중 첫 번째로 포커스를 옮김
+    // (스크린리더는 포커스가 간 입력칸의 오류 문구를 함께 읽어 줌)
+    if (nameError) return nameRef.current?.focus();
+    if (phoneError) return phoneRef.current?.focus();
+    if (agreeError) return agreeRef.current?.focus();
+
     onConfirm({ name: name.trim(), phone });
   };
 
@@ -62,8 +70,10 @@ export default function CustomerForm({
               이름
             </label>
             <input
+              ref={nameRef}
               id={`${id}-name`}
               type="text"
+              required
               className={styles.input}
               placeholder="홍길동"
               autoComplete="name"
@@ -82,8 +92,10 @@ export default function CustomerForm({
               연락처
             </label>
             <input
+              ref={phoneRef}
               id={`${id}-phone`}
               type="tel"
+              required
               className={styles.input}
               placeholder="010-0000-0000"
               autoComplete="tel"
@@ -101,8 +113,12 @@ export default function CustomerForm({
           <div className={styles.field}>
             <label className={styles.agree}>
               <input
+                ref={agreeRef}
                 type="checkbox"
+                required
                 checked={agreed}
+                aria-invalid={submitted && agreeError !== ""}
+                aria-describedby={`${id}-agree-error`}
                 onChange={(event) => setAgreed(event.target.checked)}
               />
               <span>
@@ -110,7 +126,9 @@ export default function CustomerForm({
                 수집 항목: 이름, 연락처 · 이용 목적: 상담 예약 안내
               </span>
             </label>
-            <p className={styles.error}>{submitted && agreeError}</p>
+            <p id={`${id}-agree-error`} className={styles.error}>
+              {submitted && agreeError}
+            </p>
           </div>
         </div>
       </div>

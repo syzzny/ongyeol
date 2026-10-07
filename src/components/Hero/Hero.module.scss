@@ -92,6 +92,17 @@
   span {
     color: var(--color-accent);
   }
+
+  /* 선택 · 필수 표시 */
+  small {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .required {
+    color: var(--color-error);
+  }
 }
 
 .stepRow {
@@ -244,6 +255,10 @@ outline: 2px solid var(--color-focus);
 }
 
 .submitButton {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 64px;
   border-radius: var(--radius-4);
@@ -272,6 +287,53 @@ outline: 2px solid var(--color-focus);
 
   @include tablet {
     height: 56px;
+  }
+
+  /* 보내는 중: 눌러도 반응하지 않는다는 표시 */
+  &[aria-disabled="true"] {
+    background: var(--color-primary-hover);
+    cursor: progress;
+
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+/* 보내는 중에 도는 동그라미 */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: var(--color-text-inverse);
+  border-radius: 50%;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* 보내기에 실패했을 때 버튼 아래 안내 */
+.submitError {
+  padding: var(--space-12);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-4);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  word-break: keep-all;
+
+  strong {
+    display: block;
+    font-weight: 600;
+    color: var(--color-error);
   }
 }
 
