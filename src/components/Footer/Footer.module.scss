@@ -1,0 +1,248 @@
+@use "@/styles/mixins" as *;
+
+/* 가운데 정보와 SNS가 한 줄에 들어가지 않는 폭 — 이 아래로는 브랜드를 윗줄로 올림 */
+$bp-stack: 1023px;
+
+/* 항목 사이 가운뎃점(·)이 차지하는 폭 */
+$dot-space: 14px;
+
+.footer {
+  padding: 72px var(--gutter) var(--space-48);
+  background: var(--color-bg-dark);
+
+  @include mobile {
+    padding-block: var(--space-48) var(--space-40);
+  }
+}
+
+.inner {
+  @include container;
+}
+
+/* ---------- 위쪽: 브랜드 / 병원 정보 / SNS ---------- */
+
+.top {
+  display: flex;
+  gap: var(--space-40) var(--space-48);
+  align-items: flex-start;
+  justify-content: space-between;
+
+  @media (max-width: $bp-stack) {
+    flex-wrap: wrap;
+  }
+}
+
+.brand {
+  display: flex;
+  flex: 0 1 336px; // 시안의 왼쪽 칸 폭
+  flex-direction: column;
+  gap: var(--space-24);
+
+  @include tablet {
+    flex-basis: auto;
+  }
+
+  @media (max-width: $bp-stack) {
+    flex: 1 1 100%;
+  }
+
+  @include mobile {
+    gap: var(--space-16);
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.symbol {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-text-inverse);
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.2;
+  white-space: nowrap;
+
+  strong {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text-inverse);
+  }
+
+  small {
+    font-size: 7px;
+    color: #aab8bf;
+  }
+}
+
+.tagline {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #9da6a8;
+  word-break: keep-all;
+}
+
+.info {
+  display: flex;
+  flex: 0 1 488px; // 시안의 가운데 칸 폭
+  flex-direction: column;
+  gap: var(--space-8);
+  overflow: hidden; // 줄 맨 앞에 온 가운뎃점을 잘라냄
+  font-size: 13px;
+  font-style: normal;
+  line-height: 20px;
+  color: #9da6a8;
+
+  @include tablet {
+    flex-basis: auto;
+  }
+
+  @media (max-width: $bp-stack) {
+    flex: 1 1 0;
+  }
+
+  @include mobile {
+    flex-basis: 100%;
+  }
+}
+
+.infoLine {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -$dot-space;
+
+  &:first-child {
+    color: #d2d7d8;
+  }
+
+  span {
+    position: relative;
+    padding-left: $dot-space;
+
+    &::before {
+      content: "·";
+      position: absolute;
+      left: 0;
+      width: $dot-space;
+      text-align: center;
+    }
+  }
+}
+
+.sns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  align-items: flex-end;
+
+  @include mobile {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-8) var(--space-24);
+    width: 100%;
+  }
+}
+
+.snsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  color: var(--color-text-inverse);
+  transition: color 0.2s;
+
+  svg {
+    transition: translate 0.2s;
+  }
+
+  @include hover {
+    color: #aab8bf;
+
+    svg {
+      translate: 2px -2px;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-text-inverse);
+    outline-offset: 4px;
+  }
+}
+
+.hidden {
+  @include visually-hidden;
+}
+
+/* ---------- 아래쪽: 약관 / 저작권 ---------- */
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12) var(--space-24);
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-48);
+  padding-top: var(--space-24);
+  border-top: 1px solid #2e3436;
+
+  @include mobile {
+    margin-top: var(--space-40);
+  }
+}
+
+.policy {
+  display: flex;
+  gap: var(--space-24);
+  font-size: 13px;
+  line-height: 20px;
+  color: #9da6a8;
+
+  strong {
+    font-weight: 400;
+    color: var(--color-text-inverse);
+    transition: color 0.2s;
+  }
+}
+
+.policyLink {
+  transition: color 0.2s;
+
+  @include hover {
+    &,
+    strong {
+      color: #aab8bf;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-text-inverse);
+    outline-offset: 4px;
+  }
+}
+
+.copyright {
+  font-size: 12px;
+  line-height: 1.2;
+  color: #848f91;
+}
+
+.notice {
+  margin-top: var(--space-16);
+  font-size: 12px;
+  line-height: 18px;
+  color: #848f91;
+  word-break: keep-all;
+}

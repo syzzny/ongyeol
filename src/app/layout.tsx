@@ -3,6 +3,7 @@ import { Bebas_Neue } from "next/font/google";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "@/styles/globals.scss";
 import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 
 const bebasNeue = Bebas_Neue({
   weight: "400",
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
