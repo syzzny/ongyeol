@@ -63,7 +63,14 @@ export default function Clinic() {
         />
 
         {/* ---------- 공간 사진 ---------- */}
-        <ul ref={trackRef} className={styles.track} onScroll={handleScroll}>
+                {/* 키보드로도 좌우로 넘겨 볼 수 있게 포커스를 받도록 함 (방향키로 스크롤) */}
+        <ul
+          ref={trackRef}
+          className={styles.track}
+          tabIndex={0}
+          aria-label="병원 공간 사진"
+          onScroll={handleScroll}
+        >
           {SPACES.map((space) => (
             <li key={space.en} className={styles.item}>
               <figure className={styles.photo}>

@@ -186,30 +186,36 @@
 
 .dots {
   display: flex;
-  gap: 6px;
   align-items: center;
   margin-inline: var(--space-4);
 }
 
+/*
+ * 버튼 자체는 24×24px (손가락으로 누르기 위한 최소 크기)
+ * 눈에 보이는 점은 그 안에 ::before로 작게 그림
+ */
 .dot {
-  position: relative;
-  width: 11px;
-  height: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding-inline: 6.5px;
   border-radius: var(--radius-full);
-  background: var(--color-line);
-  transition:
-    width 0.3s ease,
-    background 0.3s ease;
 
-  /* 보이는 크기는 작게 두고, 누르는 영역만 위아래로 넓힘 */
-  &::after {
+  &::before {
     content: "";
-    position: absolute;
-    inset: -8px -2px;
+    width: 11px;
+    height: 11px;
+    border-radius: var(--radius-full);
+    background: var(--color-line);
+    transition:
+      width 0.3s ease,
+      background 0.3s ease;
   }
 
   /* 현재 묶음: 길쭉한 남색 알약 모양 */
-  &[aria-current] {
+  &[aria-current]::before {
     width: 28px;
     background: var(--color-primary);
   }

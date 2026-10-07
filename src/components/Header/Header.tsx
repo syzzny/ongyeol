@@ -74,7 +74,6 @@ export default function Header() {
       <Link
         href="/"
         className={styles.logo}
-        aria-label="온결피부과 홈"
         onClick={closeMenu}
       >
         <span className={styles.symbol} aria-hidden="true" />
