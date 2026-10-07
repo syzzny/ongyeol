@@ -58,7 +58,7 @@
   margin-bottom: var(--space-4);
   font-size: 13px;
   line-height: 32px;
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted);
 }
 
 .days {
@@ -189,5 +189,5 @@ outline: 2px solid var(--color-focus);
 
 .empty {
   font-size: 14px;
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted);
 }

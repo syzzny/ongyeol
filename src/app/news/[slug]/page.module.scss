@@ -198,7 +198,7 @@
 .pagerDate {
   flex: none;
   font-size: 14px;
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted);
 
   @include mobile {
     display: none;
@@ -208,7 +208,7 @@
 .pagerEmpty {
   font-size: 15px;
   line-height: 24px;
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted);
 }
 
 /* ---------- 목록으로 ---------- */

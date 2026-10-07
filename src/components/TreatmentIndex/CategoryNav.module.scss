@@ -73,7 +73,7 @@
 .count {
   font-size: 13px;
   font-weight: 500;
-  color: var(--color-text-subtle);
+  color: var(--color-text-muted);
   transition: color 0.2s ease;
 
   @include mobile {
