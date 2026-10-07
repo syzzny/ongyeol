@@ -1,0 +1,115 @@
+@use "@/styles/mixins" as *;
+
+.section {
+  @include section;
+  background: var(--color-bg);
+}
+
+.inner {
+  @include container;
+}
+
+/* ---------- 2단: 왼쪽 지도 | 오른쪽 정보 ---------- */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 640fr) minmax(0, 560fr); /* 시안의 640 : 560 비율 유지 */
+  gap: var(--space-48);
+  align-items: start;
+  margin-top: var(--space-48);
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-32);
+  }
+
+  @include mobile {
+    margin-top: var(--space-32);
+  }
+}
+
+/* ---------- 방문 정보 ---------- */
+
+.info {
+  border-top: 1px solid var(--color-line);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap; /* 내용이 들어갈 자리가 부족하면 항목명 아래로 내려감 */
+  gap: var(--space-4) var(--space-16); /* 세로 4px, 가로 16px */
+  align-items: baseline; /* 글자 크기가 달라도 첫 줄의 글자 밑선을 맞춤 */
+  padding-block: var(--space-24);
+  border-bottom: 1px solid var(--color-line);
+
+  /* 항목명은 흐리게, 내용은 진하게 → 내용이 먼저 읽힘 */
+  dt {
+    flex: none;
+    width: 72px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 24px;
+    color: var(--color-text-muted);
+  }
+
+  dd {
+    flex: 1 1 220px; /* 최소 220px은 있어야 항목명 옆에 놓임 */
+    min-width: 0;
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--color-text-strong);
+    word-break: keep-all;
+  }
+
+  @include mobile {
+    padding-block: var(--space-20);
+  }
+}
+
+/* ---------- 진료시간표 ---------- */
+
+.hours {
+  display: grid;
+  gap: var(--space-4);
+
+  li {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr); /* 요일 | 시간 */
+    gap: var(--space-16);
+  }
+
+  /* 숫자 폭을 똑같이 맞춰 시간이 세로로 가지런히 놓이게 */
+  span:last-child {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  @include mobile {
+    li {
+      grid-template-columns: 104px minmax(0, 1fr);
+      gap: var(--space-12);
+    }
+  }
+}
+
+/* 휴진 */
+.closed {
+  color: var(--color-text-subtle);
+}
+
+.phone {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-accent);
+
+  @include hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
+  }
+}

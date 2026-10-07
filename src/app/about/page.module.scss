@@ -1,0 +1,711 @@
+@use "@/styles/mixins" as *;
+
+/* 움직임에 공통으로 쓰는 속도 곡선: 빠르게 출발해서 천천히 멈춤 */
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+/* 기기에서 "동작 줄이기"를 켜지 않았을 때만 움직임 적용 */
+@mixin motion {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+/* 스크롤해서 나타나는 움직임: 자바스크립트가 꺼져 있으면 숨기지 않고 그냥 보여줌 */
+@mixin reveal {
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+.srOnly {
+  @include visually-hidden;
+}
+
+.eyebrow {
+  @include eyebrow;
+}
+
+/* 글자가 아래에서 올라오는 줄: 바깥(.line)이 가림막, 안쪽 span이 움직임 */
+.line {
+  display: block;
+  overflow: hidden;
+
+  > span {
+    display: block;
+  }
+}
+
+/* ---------- 첫 화면 ---------- */
+
+.hero {
+  padding: var(--space-64) var(--gutter) 120px;
+  overflow: hidden;
+  background: var(--color-surface);
+
+  @include tablet {
+    padding-bottom: var(--space-96);
+  }
+
+  @include mobile {
+    padding-block: var(--space-40) var(--space-64);
+  }
+}
+
+.heroInner {
+  @include container;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-64);
+  align-items: center;
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+  }
+
+  @include mobile {
+    gap: var(--space-32);
+  }
+}
+
+.title {
+  margin-top: var(--space-20);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+
+  @include tablet {
+    font-size: 40px;
+  }
+
+  @include mobile {
+    margin-top: var(--space-16);
+    font-size: 28px;
+  }
+}
+
+.lead {
+  @include body;
+  max-width: 420px;
+  margin-top: var(--space-24);
+
+  @include mobile {
+    margin-top: var(--space-16);
+  }
+}
+
+.heroMedia {
+  position: relative;
+
+  /* 작은 사진이 왼쪽 아래로 삐져나오는 만큼 자리를 비워둠 */
+  @include tablet {
+    margin-left: var(--space-40);
+  }
+
+  @include mobile {
+    margin-left: var(--space-24);
+  }
+}
+
+.mainPhoto {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-top-left-radius: 150px;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+
+  @include mobile {
+    border-top-left-radius: 100px;
+  }
+}
+
+.subPhoto {
+  position: absolute;
+  bottom: -56px;
+  left: -56px;
+  width: 32%;
+  aspect-ratio: 3 / 4;
+  border: 8px solid var(--color-surface); /* 큰 사진을 파낸 것처럼 보이게 하는 테두리 */
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+
+  @include tablet {
+    bottom: -40px;
+    left: -40px;
+  }
+
+  @include mobile {
+    bottom: -32px;
+    left: -24px;
+    width: 36%;
+    border-width: 6px;
+  }
+}
+
+/* 페이지가 열릴 때 한 번: 제목이 올라오고, 사진이 아래에서 위로 드러남 */
+@include motion {
+  .title .line > span {
+    animation: rise 0.9s $ease both;
+  }
+
+  .title .line:nth-child(2) > span {
+    animation-delay: 0.12s;
+  }
+
+  .hero .eyebrow,
+  .lead {
+    animation: fade 0.8s ease 0.5s both;
+  }
+
+  .mainPhoto {
+    animation: uncover 1.2s $ease 0.15s both;
+
+    img {
+      animation: settle 1.8s $ease 0.15s both;
+    }
+  }
+
+  .subPhoto {
+    animation: uncover 1s $ease 0.55s both;
+  }
+}
+
+@keyframes rise {
+  from {
+    translate: 0 105%;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes uncover {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes settle {
+  from {
+    scale: 1.12;
+  }
+}
+
+/* ---------- 숫자 ---------- */
+
+.stats {
+  padding: var(--space-64) var(--gutter);
+  border-bottom: 1px solid var(--color-line);
+
+  @include mobile {
+    padding-block: var(--space-40);
+  }
+}
+
+.statsInner {
+  @include container;
+}
+
+.statList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  @include mobile {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-32);
+  }
+}
+
+.stat {
+  padding-left: var(--space-32);
+  border-left: 1px solid var(--color-line);
+
+  &:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  dt {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--color-text-muted);
+  }
+
+  dd {
+    display: flex;
+    gap: var(--space-4);
+    align-items: baseline;
+    margin-top: var(--space-8);
+  }
+
+  @include tablet {
+    padding-left: var(--space-24);
+  }
+
+  @include mobile {
+    padding-left: var(--space-20);
+
+    /* 2열일 때는 왼쪽 열(1 · 3번째)의 선을 없앰 */
+    &:nth-child(odd) {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+}
+
+.number {
+  display: block;
+  overflow: hidden; /* 숫자가 올라오는 가림막 */
+  font-family: var(--font-display);
+  font-size: 72px;
+  line-height: 1;
+  color: var(--color-primary);
+
+  > span {
+    display: block;
+  }
+
+  @include tablet {
+    font-size: 56px;
+  }
+
+  @include mobile {
+    font-size: 48px;
+  }
+}
+
+.unit {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-primary);
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+/* 화면에 들어오면 숫자가 왼쪽부터 차례로 올라옴 */
+@include reveal {
+  .number > span {
+    translate: 0 105%;
+    transition: translate 0.9s $ease calc(var(--i) * 0.1s);
+  }
+
+  .statsInner[data-visible] .number > span {
+    translate: 0;
+  }
+}
+
+/* ---------- 온결이 진료하는 방식 ---------- */
+
+.stories {
+  @include section;
+}
+
+.storiesInner {
+  @include container;
+}
+
+.story {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-40) var(--space-96);
+  align-items: center;
+
+  & + & {
+    margin-top: 120px;
+  }
+
+  @include tablet {
+    gap: var(--space-40) var(--space-48);
+
+    & + & {
+      margin-top: var(--space-96);
+    }
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-24);
+
+    & + & {
+      margin-top: var(--space-64);
+    }
+  }
+}
+
+.storyPhoto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+/* 홀수 번째: 사진이 왼쪽, 바깥쪽(왼쪽 위) 모서리를 둥글게 */
+.story:nth-of-type(odd) .storyPhoto {
+  border-top-left-radius: 150px;
+
+  @include mobile {
+    border-top-left-radius: 100px;
+  }
+}
+
+/* 짝수 번째: 사진이 오른쪽, 바깥쪽(오른쪽 위) 모서리를 둥글게 */
+.story:nth-of-type(even) .storyPhoto {
+  order: 2;
+  border-top-right-radius: 150px;
+
+  @include mobile {
+    order: 0; /* 모바일에서는 항상 사진이 위 */
+    border-top-right-radius: 100px;
+  }
+}
+
+.storyTitle {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+
+  @include tablet {
+    font-size: 26px;
+  }
+
+  @include mobile {
+    font-size: 22px;
+  }
+}
+
+.storyDesc {
+  @include body;
+  max-width: 440px;
+  margin-top: var(--space-20);
+
+  @include mobile {
+    margin-top: var(--space-12);
+  }
+}
+
+.storyLink {
+  display: inline-block;
+  margin-top: var(--space-24);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--color-line);
+  text-underline-offset: 6px;
+  transition: text-decoration-color 0.2s ease;
+
+  @include hover {
+    text-decoration-color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
+  }
+
+  @include mobile {
+    margin-top: var(--space-16);
+  }
+}
+
+/* 화면에 들어오면 사진이 아래에서 위로 드러남 */
+@include reveal {
+  .storyPhoto {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.2s $ease;
+
+    img {
+      scale: 1.12;
+      transition: scale 1.8s $ease;
+    }
+
+    &[data-visible] {
+      clip-path: inset(0);
+
+      img {
+        scale: 1;
+      }
+    }
+  }
+}
+
+/* ---------- 약속 ---------- */
+
+.promise {
+  @include section;
+  text-align: center;
+  background: var(--color-bg-dark);
+}
+
+.promiseInner {
+  @include container;
+}
+
+.emblem {
+  width: 112px;
+  height: 112px;
+  margin-inline: auto;
+
+  @include motion {
+    animation: spin 28s linear infinite;
+  }
+
+  @include mobile {
+    width: 88px;
+    height: 88px;
+  }
+}
+
+.emblemText {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  fill: var(--color-text-inverse-subtle);
+}
+
+.emblemDot {
+  fill: var(--color-accent);
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.promiseText {
+  margin-top: var(--space-40);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--color-text-inverse);
+  word-break: keep-all;
+
+  @include tablet {
+    font-size: 26px;
+  }
+
+  @include mobile {
+    margin-top: var(--space-32);
+    font-size: 20px;
+  }
+}
+
+.promiseSign {
+  margin-top: var(--space-32);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-inverse-subtle);
+
+  @include mobile {
+    margin-top: var(--space-24);
+  }
+}
+
+/* 화면에 들어오면 문장이 한 줄씩 올라옴 */
+@include reveal {
+  .promiseText .line > span {
+    translate: 0 105%;
+    transition: translate 1s $ease;
+  }
+
+  .promiseText .line:nth-child(2) > span {
+    transition-delay: 0.12s;
+  }
+
+  .promiseText .line:nth-child(3) > span {
+    transition-delay: 0.24s;
+  }
+
+  .promiseSign {
+    opacity: 0;
+    transition: opacity 0.8s ease 0.7s;
+  }
+
+  .promiseInner[data-visible] {
+    .promiseText .line > span {
+      translate: 0;
+    }
+
+    .promiseSign {
+      opacity: 1;
+    }
+  }
+}
+
+/* ---------- 자주 묻는 질문 ---------- */
+
+.faq {
+  @include section;
+}
+
+.faqInner {
+  @include container;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: var(--space-64);
+  align-items: start;
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-40);
+  }
+
+  @include mobile {
+    gap: var(--space-32);
+  }
+}
+
+.faqHead {
+  /* 질문을 읽어 내려가는 동안 제목이 따라옴 */
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-40));
+
+  @include tablet {
+    position: static;
+  }
+}
+
+.faqTitle {
+  @include section-title;
+  margin-top: var(--space-20);
+
+  @include mobile {
+    margin-top: var(--space-16);
+  }
+}
+
+.faqDesc {
+  @include body;
+  max-width: 300px;
+  margin-top: var(--space-16);
+}
+
+/* ---------- 상담 안내 ---------- */
+
+.cta {
+  padding: 0 var(--gutter) var(--section-y);
+}
+
+.ctaPanel {
+  @include container;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-32) var(--space-48);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-64);
+  border-top-left-radius: 150px;
+  background: var(--color-surface-warm);
+
+  @include tablet {
+    padding: var(--space-48) var(--space-40) var(--space-48) var(--space-64);
+  }
+
+  @include mobile {
+    padding: var(--space-48) var(--space-24) var(--space-32);
+    border-top-left-radius: 100px;
+  }
+}
+
+.ctaTitle {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+
+  @include tablet {
+    font-size: 26px;
+  }
+
+  @include mobile {
+    font-size: 22px;
+  }
+}
+
+.ctaDesc {
+  @include body;
+  margin-top: var(--space-12);
+}
+
+.ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+
+  @include mobile {
+    width: 100%;
+
+    > * {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+.ctaPrimary,
+.ctaSecondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  padding-inline: 28px;
+  border-radius: var(--radius-4);
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+.ctaPrimary {
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+
+  @include hover {
+    background: var(--color-primary-hover);
+  }
+
+  &:active {
+    background: var(--color-primary-pressed);
+  }
+}
+
+.ctaSecondary {
+  border: 1px solid var(--color-line);
+  color: var(--color-text-strong);
+  background: var(--color-bg);
+
+  @include hover {
+    border-color: var(--color-primary);
+  }
+}

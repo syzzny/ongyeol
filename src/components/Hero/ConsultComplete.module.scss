@@ -1,0 +1,71 @@
+@use "@/styles/mixins" as *;
+
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: var(--space-8) var(--space-24);
+  text-align: center;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-16);
+  border-radius: 50%;
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+}
+
+.headline {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+}
+
+.desc {
+  @include desc;
+  margin-top: var(--space-8);
+}
+
+/* ---------- 신청 내용 요약 ---------- */
+
+.summary {
+  padding: var(--space-4) var(--space-20);
+  border-radius: var(--radius-8);
+  background: var(--color-bg-subtle);
+
+  /* 한 줄 = 항목명 + 내용 */
+  > div {
+    display: flex;
+    gap: var(--space-16);
+    padding-block: var(--space-12);
+    font-size: 15px;
+    line-height: 24px;
+
+    & + div {
+      border-top: 1px solid var(--color-border);
+    }
+  }
+
+  dt {
+    flex: none;
+    width: 72px;
+    color: var(--color-text-muted);
+  }
+
+  dd {
+    font-weight: 500;
+    color: var(--color-text-strong);
+    word-break: keep-all;
+  }
+    /* 내용이 여러 줄 목록일 때 (선택한 시술 등) */
+  dd li + li {
+    margin-top: var(--space-4);
+  }
+}

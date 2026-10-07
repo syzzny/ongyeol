@@ -1,0 +1,162 @@
+@use "@/styles/mixins" as *;
+
+.page {
+  min-height: calc(100svh - var(--header-height));
+  background: var(--color-surface);
+}
+
+.inner {
+  /* 본문 최대 폭 + 좌우 여백 */
+  max-width: calc(var(--container-max) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding: var(--space-24) var(--gutter) var(--section-y);
+
+  /* 아래 고정 요약 바에 내용이 가리지 않게 */
+  @include tablet {
+    padding-bottom: calc(var(--section-y) + 72px);
+  }
+}
+
+/* ---------- 현재 위치 ---------- */
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 14px;
+  color: var(--color-text-muted);
+
+  /* 항목 사이의 > 표시 */
+  li + li::before {
+    content: ">";
+    margin-inline: var(--space-8);
+    color: var(--color-line);
+  }
+
+  a {
+    transition: color 0.2s ease;
+
+    @include hover {
+      color: var(--color-text-strong);
+    }
+  }
+
+  [aria-current] {
+    color: var(--color-text-strong);
+  }
+}
+
+/* ---------- 본문 2단: 왼쪽 내용 | 오른쪽 선택 패널 ---------- */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--space-64);
+  align-items: start;
+  margin-top: var(--space-48);
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+    margin-top: var(--space-40);
+  }
+}
+
+/* ---------- 시술 소개 ---------- */
+
+.intro {
+  margin-bottom: var(--space-48);
+
+  @include mobile {
+    margin-bottom: var(--space-40);
+  }
+}
+
+.en {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+  color: rgb(var(--tone)); /* 목록 카드와 같은 색 */
+}
+
+.title {
+  margin-top: var(--space-12);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-strong);
+
+  @include mobile {
+    font-size: 26px;
+  }
+}
+
+.description {
+  @include body;
+  max-width: 640px;
+  margin-top: var(--space-16);
+}
+
+.concerns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin-top: var(--space-20);
+
+  li {
+    padding: var(--space-8) var(--space-12);
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-text);
+    background: var(--color-surface-warm);
+  }
+}
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16) var(--space-32);
+  margin-top: var(--space-24);
+}
+
+.metric {
+  display: flex;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.metricIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.metricLabel {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.metricValue {
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text-strong);
+}
+
+.note {
+  margin-top: var(--space-16);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--color-text-subtle);
+  word-break: keep-all;
+}

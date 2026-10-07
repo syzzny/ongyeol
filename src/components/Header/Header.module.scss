@@ -1,0 +1,193 @@
+@use "@/styles/mixins" as *;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding-inline: var(--space-24);
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-line);
+
+  @include mobile {
+    padding-inline: var(--gutter);
+  }
+}
+
+/* ---------- 로고 ---------- */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.symbol {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.2;
+  white-space: nowrap;
+
+  strong {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-text-strong);
+  }
+
+  small {
+    font-size: 9px;
+    letter-spacing: 0.02em;
+    color: var(--color-text-subtle);
+  }
+}
+
+/* ---------- 메뉴 ---------- */
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: var(--space-32);
+
+  @include tablet {
+    gap: var(--space-20);
+  }
+}
+
+.navLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--header-height);
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--color-text);
+
+    @include tablet {
+    font-size: 15px;
+  }
+
+  /* 호버 시 아래에서 나타나는 2px 인디케이터 */
+  &::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- 우측 버튼 ---------- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+
+  @include mobile {
+    gap: var(--space-4);
+  }
+}
+
+.reserve {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding-inline: var(--space-20);
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+    transition: background 0.2s ease;
+
+  @include hover {
+    background: var(--color-primary-hover);
+  }
+
+  &:active {
+    background: var(--color-primary-pressed);
+  }
+
+  @include mobile {
+    height: 36px;
+    padding-inline: var(--space-16);
+    font-size: 13px;
+  }
+}
+
+.menuButton {
+  display: none;
+
+  @include mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: -8px;
+    color: var(--color-text-strong);
+  }
+}
+
+/* ---------- 모바일 메뉴 패널 ---------- */
+
+@include mobile {
+  .nav {
+    position: fixed;
+    inset: var(--header-height) 0 0 0;
+    padding: var(--space-8) var(--gutter) var(--space-40);
+    overflow-y: auto;
+    background: var(--color-bg);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0.2s;
+  }
+
+  .nav.open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+
+  .navList {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .navLink {
+    height: 56px;
+    font-size: 18px;
+    border-bottom: 1px solid var(--color-border);
+
+    &::after {
+      display: none;
+    }
+  }
+}

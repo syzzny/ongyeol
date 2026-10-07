@@ -1,0 +1,83 @@
+@use "@/styles/mixins" as *;
+
+.list {
+  border-top: 1px solid var(--color-text-strong);
+}
+
+.item {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.question {
+  display: flex;
+  gap: var(--space-16);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-block: var(--space-24);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+  transition: color 0.2s ease;
+
+  @include hover {
+    color: var(--color-primary-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+
+  @include mobile {
+    padding-block: var(--space-20);
+    font-size: 16px;
+  }
+}
+
+/* + 아이콘: 열리면 45도 돌아 × 모양이 됨 */
+.icon {
+  flex: none;
+  color: var(--color-text-muted);
+  transition: rotate 0.3s ease;
+
+  [aria-expanded="true"] > & {
+    rotate: 45deg;
+  }
+}
+
+/* 답변: 행 높이를 0 → 내용 높이로 바꿔서 부드럽게 열림 */
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden; /* 닫힌 동안에는 화면 낭독기와 키보드가 지나치게 */
+  transition:
+    grid-template-rows 0.35s ease,
+    visibility 0s 0.35s;
+
+  &[data-open] {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows 0.35s ease,
+      visibility 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.panelInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.answer {
+  @include body;
+  max-width: 560px;
+  padding-bottom: var(--space-24);
+}

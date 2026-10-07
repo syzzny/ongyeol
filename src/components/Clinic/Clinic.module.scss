@@ -1,0 +1,129 @@
+@use "@/styles/mixins" as *;
+
+.section {
+  @include section;
+  background: var(--color-bg-subtle);
+}
+
+.inner {
+  @include container;
+}
+
+/* ---------- 공간 사진 (가로 스크롤) ---------- */
+
+.track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(500px, 85%); /* 좁은 화면에서는 다음 사진이 살짝 보이게 */
+  gap: var(--space-20);
+  margin-top: 88px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  @include tablet {
+    margin-top: var(--space-64);
+  }
+
+  @include mobile {
+    gap: var(--space-12);
+    margin-top: var(--space-40);
+  }
+}
+
+.item {
+  scroll-snap-align: start;
+}
+
+.photo {
+  position: relative;
+  aspect-ratio: 25 / 16;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+/* 사진 왼쪽 아래 라벨 */
+.label {
+  position: absolute;
+  bottom: var(--space-16);
+  left: var(--space-16);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  height: 32px;
+  padding-inline: var(--space-12);
+  border-radius: var(--radius-2);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-text-strong);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(3px);
+
+  @include mobile {
+    bottom: var(--space-12);
+    left: var(--space-12);
+  }
+}
+
+/* ---------- 진행 바 · 이전/다음 ---------- */
+
+.footer {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  margin-top: var(--space-12);
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  margin-right: var(--space-16);
+  background: var(--color-line);
+
+  /* 채워진 부분: 왼쪽을 기준으로 가로 길이만 늘었다 줄었다 함 */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--color-primary);
+    scale: var(--filled, 0) 1;
+    transform-origin: left;
+    transition: scale 0.3s ease;
+  }
+}
+
+.control {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+
+  @include hover {
+    &:not(:disabled) {
+      color: var(--color-primary);
+      background: var(--color-bg);
+    }
+  }
+
+  &:disabled {
+    color: var(--color-line);
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}

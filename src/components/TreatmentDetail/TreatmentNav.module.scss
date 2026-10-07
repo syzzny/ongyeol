@@ -1,0 +1,111 @@
+@use "@/styles/mixins" as *;
+
+.nav {
+  background: var(--color-surface);
+}
+
+/* 두 줄 공통: 가운데 정렬, 좁으면 가로로 밀어서 보기 */
+.categories,
+.treatments {
+  position: relative; /* 현재 메뉴 위치 계산의 기준 */
+  display: flex;
+  padding-inline: var(--gutter);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+
+  /* 내용이 넘칠 때도 첫 항목이 잘리지 않는 가운데 정렬 */
+  > :first-child {
+    margin-left: auto;
+  }
+
+  > :last-child {
+    margin-right: auto;
+  }
+}
+
+/* ---------- 1단: 카테고리 ---------- */
+
+.categories {
+  gap: var(--space-32);
+
+  @include mobile {
+    gap: var(--space-20);
+  }
+}
+
+.category {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  border-bottom: 2px solid transparent;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+
+  @include hover {
+    color: var(--color-text-strong);
+  }
+
+  &[aria-current] {
+    border-color: var(--color-accent);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+
+  @include mobile {
+    height: 52px;
+    font-size: 15px;
+  }
+}
+
+/* ---------- 2단: 시술 ---------- */
+
+.treatments {
+  li {
+    display: flex;
+    align-items: center;
+  }
+
+  /* 항목 사이의 가운뎃점 */
+  li + li::before {
+    content: "·";
+    margin-inline: var(--space-12);
+    color: var(--color-line);
+  }
+}
+
+.treatment {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  font-size: 16px;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+
+  @include hover {
+    color: var(--color-text-strong);
+  }
+
+  &[aria-current] {
+    font-weight: 700;
+    color: var(--color-text-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+
+  @include mobile {
+    height: 48px;
+    font-size: 15px;
+  }
+}

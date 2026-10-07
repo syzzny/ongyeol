@@ -1,0 +1,82 @@
+@use "@/styles/mixins" as *;
+
+/* 데스크톱: 왼쪽에 붙어서 따라오는 세로 목록 */
+.nav {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-40));
+
+  /* 모바일: 헤더 바로 아래에 붙는 가로 탭 */
+  @include mobile {
+    top: var(--header-height);
+    z-index: 1;
+    margin-inline: calc(var(--gutter) * -1); /* 화면 양 끝까지 넓힘 */
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-bg);
+  }
+}
+
+.list {
+  @include mobile {
+    position: relative; /* 탭 위치 계산의 기준 */
+    display: flex;
+    gap: var(--space-20);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-12);
+  border-bottom: 1px solid var(--color-line);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+
+  @include hover {
+    color: var(--color-text-strong);
+  }
+
+  /* 지금 보고 있는 카테고리 */
+  &[aria-current] {
+    font-weight: 600;
+    color: var(--color-text-strong);
+
+    .count {
+      color: var(--color-accent);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+
+  @include mobile {
+    padding-block: var(--space-16) 14px;
+    border-bottom: 2px solid transparent;
+    font-size: 15px;
+    white-space: nowrap;
+
+    &[aria-current] {
+      border-bottom-color: var(--color-primary);
+    }
+  }
+}
+
+/* 시술 개수 */
+.count {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-subtle);
+  transition: color 0.2s ease;
+
+  @include mobile {
+    display: none;
+  }
+}

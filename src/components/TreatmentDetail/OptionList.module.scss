@@ -1,0 +1,184 @@
+@use "@/styles/mixins" as *;
+
+/* ---------- 개수 · 정렬 ---------- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12) var(--space-24);
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-16);
+  border-bottom: 1px solid var(--color-accent);
+}
+
+.count {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+
+  strong {
+    font-weight: 700;
+    color: var(--color-text-strong);
+  }
+}
+
+.sorts {
+  display: flex;
+  align-items: center;
+}
+
+.sort {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+
+  /* 버튼 사이의 가운뎃점 */
+  & + &::before {
+    content: "·";
+    margin-inline: var(--space-8);
+    font-weight: 400;
+    color: var(--color-line);
+  }
+
+  @include hover {
+    color: var(--color-text-strong);
+  }
+
+  &[aria-pressed="true"] {
+    font-weight: 700;
+    color: var(--color-text-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* ---------- 옵션 한 줄 ---------- */
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto; /* 이름 | 가격 | 버튼 */
+  gap: var(--space-8) var(--space-24);
+  align-items: center;
+  padding-block: var(--space-24);
+  border-bottom: 1px solid var(--color-border);
+
+  /* 모바일: 이름 아래에 가격, 버튼은 오른쪽에 */
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding-block: var(--space-20);
+  }
+}
+
+.info {
+  @include mobile {
+    grid-column: 1;
+  }
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: var(--space-8);
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--color-accent);
+  background: var(--color-surface-warm);
+}
+
+.name {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+
+  @include mobile {
+    font-size: 17px;
+  }
+}
+
+.note {
+  margin-top: var(--space-4);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-muted);
+}
+
+.priceBox {
+  text-align: right;
+
+  @include mobile {
+    grid-row: 2;
+    grid-column: 1;
+    text-align: left;
+  }
+}
+
+.original {
+  display: block;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-subtle);
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--color-accent);
+  white-space: nowrap;
+
+  @include mobile {
+    font-size: 20px;
+  }
+}
+
+.discount {
+  margin-right: var(--space-8);
+  color: var(--color-error);
+}
+
+/* ---------- 담기 버튼 ---------- */
+
+.add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-4);
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+  transition: background 0.2s ease;
+
+  @include hover {
+    background: var(--color-primary-hover);
+  }
+
+  &:active {
+    background: var(--color-primary-pressed);
+  }
+
+  /* 담긴 상태: 포인트 컬러 + 체크 아이콘 */
+  &[aria-pressed="true"] {
+    background: var(--color-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @include mobile {
+    grid-row: 1 / span 2; /* 이름·가격 두 줄 높이의 가운데 */
+    grid-column: 2;
+    width: 44px;
+    height: 44px;
+  }
+}

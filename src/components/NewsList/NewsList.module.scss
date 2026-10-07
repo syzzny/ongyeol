@@ -1,0 +1,279 @@
+@use "@/styles/mixins" as *;
+
+.srOnly {
+  @include visually-hidden;
+}
+
+.wrap {
+  max-width: calc(var(--container-max) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding: var(--space-32) var(--gutter) var(--section-y);
+
+  @include mobile {
+    padding-top: var(--space-20);
+  }
+}
+
+/* ---------- 분류 버튼 ---------- */
+
+.filters {
+  display: flex;
+  gap: var(--space-8);
+
+  /* 모바일: 줄바꿈 대신 가로로 밀어서 보기 */
+  @include mobile {
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}
+
+.filter {
+  height: 40px;
+  padding-inline: var(--space-16);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+
+  @include hover {
+    border-color: var(--color-primary);
+  }
+
+  /* 선택된 분류 */
+  &[aria-pressed="true"] {
+    border-color: var(--color-primary);
+    color: var(--color-text-inverse);
+    background: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* 분류를 바꾸면 목록이 살짝 떠오르며 나타남 */
+.result {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: appear 0.4s ease both;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+
+/* ---------- 분류 · 날짜 ---------- */
+
+.meta {
+  display: flex;
+  gap: var(--space-8);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--color-text-muted);
+}
+
+.category {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+/* ---------- 대표 글: 왼쪽 큰 사진 | 오른쪽 글 ---------- */
+
+.featured {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-64);
+  align-items: center;
+  margin-top: var(--space-40);
+
+  @include hover {
+    .featuredPhoto img {
+      scale: 1.03;
+    }
+
+    .more {
+      text-decoration-color: var(--color-primary);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 4px;
+  }
+
+  @include tablet {
+    gap: var(--space-40);
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-20);
+    margin-top: var(--space-24);
+  }
+}
+
+.featuredPhoto {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-top-left-radius: 150px;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+    transition: scale 0.5s ease;
+  }
+
+  @include mobile {
+    border-top-left-radius: 100px;
+  }
+}
+
+.featuredTitle {
+  margin-top: var(--space-12);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+
+  @include tablet {
+    font-size: 26px;
+  }
+
+  @include mobile {
+    margin-top: var(--space-8);
+    font-size: 22px;
+  }
+}
+
+.featuredDesc {
+  @include body;
+  @include line-clamp(3);
+  margin-top: var(--space-16);
+
+  @include mobile {
+    margin-top: var(--space-12);
+  }
+}
+
+.more {
+  display: inline-block;
+  margin-top: var(--space-24);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--color-line);
+  text-underline-offset: 6px;
+  transition: text-decoration-color 0.2s ease;
+
+  @include mobile {
+    margin-top: var(--space-16);
+  }
+}
+
+/* ---------- 나머지 글: 카드 3열 ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-40) var(--space-20);
+  margin-top: var(--space-64);
+  padding-top: var(--space-40);
+  border-top: 1px solid var(--color-line);
+
+  @include tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-24);
+    margin-top: var(--space-40);
+    padding-top: var(--space-24);
+  }
+}
+
+.card {
+  display: block;
+  height: 100%;
+  padding: var(--space-20);
+  background: var(--color-surface);
+
+  .meta {
+    margin-top: var(--space-24);
+  }
+
+  /* hover: 사진이 살짝 커지고 제목 색이 바뀜 (메인 화면 뉴스 카드와 같음) */
+  @include hover {
+    .thumb img {
+      scale: 1.04;
+    }
+
+    .cardTitle {
+      color: var(--color-primary-hover);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @include mobile {
+    .meta {
+      margin-top: var(--space-20);
+    }
+  }
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+    transition: scale 0.4s ease;
+  }
+}
+
+.cardTitle {
+  margin-top: var(--space-8);
+  overflow: hidden;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap; /* 항상 한 줄로 */
+  text-overflow: ellipsis; /* 넘치는 부분은 … 으로 */
+  color: var(--color-text-strong);
+  transition: color 0.2s ease;
+
+  @include mobile {
+    font-size: 18px;
+  }
+}
+
+.cardDesc {
+  @include desc;
+  @include line-clamp(3);
+  margin-top: var(--space-12);
+  text-wrap: wrap;
+}

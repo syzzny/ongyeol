@@ -1,0 +1,388 @@
+@use "@/styles/mixins" as *;
+
+/* 움직임에 공통으로 쓰는 속도 곡선: 빠르게 출발해서 천천히 멈춤 */
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+/* 기기에서 "동작 줄이기"를 켜지 않았을 때만 움직임 적용 */
+@mixin motion {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+/* 스크롤해서 나타나는 움직임: 자바스크립트가 꺼져 있으면 숨기지 않고 그냥 보여줌 */
+@mixin reveal {
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+.srOnly {
+  @include visually-hidden;
+}
+
+.eyebrow {
+  @include eyebrow;
+}
+
+/* ---------- 페이지 제목 ---------- */
+
+.hero {
+  padding: var(--space-64) var(--gutter) 0;
+
+  @include mobile {
+    padding-top: var(--space-40);
+  }
+}
+
+/* 왼쪽에 제목, 오른쪽 아래에 설명 — 메인 화면의 섹션 머리말과 같은 배치 */
+.heroInner {
+  @include container;
+  display: flex;
+  flex-wrap: wrap; /* 설명이 들어갈 자리가 부족하면 아랫줄로 내려감 */
+  gap: var(--space-20) 56px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: var(--space-48);
+  border-bottom: 1px solid var(--color-text-strong);
+
+  @include mobile {
+    padding-bottom: var(--space-32);
+  }
+}
+
+/* 글자가 아래에서 올라오는 줄: 바깥(.line)이 가림막, 안쪽 span이 움직임 */
+.line {
+  display: block;
+  overflow: hidden;
+
+  > span {
+    display: block;
+  }
+}
+
+.title {
+  margin-top: var(--space-20);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+
+  @include tablet {
+    font-size: 40px;
+  }
+
+  @include mobile {
+    margin-top: var(--space-16);
+    font-size: 28px;
+  }
+}
+
+.lead {
+  @include body;
+  flex: 1 1 320px; /* 최소 320px은 있어야 제목 옆에 놓임 */
+  max-width: 420px;
+  padding-bottom: var(--space-8); /* 제목 마지막 줄의 글자 밑선과 높이를 맞춤 */
+
+  @include mobile {
+    padding-bottom: 0;
+  }
+}
+
+/* 페이지가 열릴 때 한 번: 제목이 한 줄씩 올라옴 */
+@include motion {
+  .title .line > span {
+    animation: rise 0.9s $ease both;
+  }
+
+  .title .line:nth-child(2) > span {
+    animation-delay: 0.12s;
+  }
+
+  .hero .eyebrow,
+  .lead {
+    animation: fade 0.8s ease 0.5s both;
+  }
+}
+
+@keyframes rise {
+  from {
+    translate: 0 105%;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- 의료진 한 명 ---------- */
+
+.profile {
+  @include section;
+
+  /* 두 번째 사람은 배경색을 바꿈 */
+  &:nth-of-type(odd) {
+    background: var(--color-bg-subtle);
+  }
+}
+
+.profileInner {
+  @include container;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); /* 사진 | 내용 */
+  gap: var(--space-96);
+  align-items: start;
+
+  @include tablet {
+    gap: var(--space-48);
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-32);
+  }
+}
+
+.photoColumn {
+  /* 오른쪽 내용을 읽어 내려가는 동안 사진이 따라옴 */
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-40));
+
+  @include mobile {
+    position: static;
+  }
+}
+
+.photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 150px 0 0; /* 왼쪽 위만 둥글게 */
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  @include mobile {
+    aspect-ratio: 1;
+    border-radius: 100px 0 0;
+  }
+}
+
+/* 태블릿 이상에서만: 두 번째 사람은 사진을 오른쪽에 두고, 둥근 모서리도 바깥쪽(오른쪽 위)으로 */
+@media (min-width: #{$bp-mobile + 1}) {
+  .profile:nth-of-type(odd) {
+    .profileInner {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); /* 내용 | 사진 */
+    }
+
+    .photoColumn {
+      order: 2;
+    }
+
+    .photo {
+      border-radius: 0 150px 0 0;
+    }
+  }
+}
+
+/* 화면에 들어오면 사진이 아래에서 위로 드러남 */
+@include reveal {
+  .photo {
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 1.2s $ease;
+
+    img {
+      scale: 1.1;
+      transition: scale 1.8s $ease;
+    }
+
+    &[data-visible] {
+      clip-path: inset(0);
+
+      img {
+        scale: 1;
+      }
+    }
+  }
+}
+
+.name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-12);
+  align-items: baseline;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--color-text-strong);
+}
+
+.role {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.quote {
+  margin-top: var(--space-20);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--color-accent);
+  word-break: keep-all;
+  text-wrap: balance;
+
+  @include tablet {
+    font-size: 20px;
+  }
+
+  @include mobile {
+    margin-top: var(--space-16);
+    font-size: 18px;
+  }
+}
+
+.philosophy {
+  @include body;
+  max-width: 560px;
+  margin-top: var(--space-16);
+}
+
+/* ---------- 항목별 정보 (항목명 | 내용) ---------- */
+
+.details {
+  margin-top: var(--space-40);
+  border-top: 1px solid var(--color-text-strong);
+
+  @include mobile {
+    margin-top: var(--space-32);
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap; /* 내용이 들어갈 자리가 부족하면 항목명 아래로 내려감 */
+  gap: var(--space-12) var(--space-24);
+  padding-block: var(--space-24);
+  border-bottom: 1px solid var(--color-line);
+
+  dt {
+    flex: none;
+    width: 96px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 26px;
+    color: var(--color-text-muted);
+  }
+
+  dd {
+    flex: 1 1 320px; /* 최소 320px은 있어야 항목명 옆에 놓임 */
+    min-width: 0;
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--color-text-strong);
+    word-break: keep-all;
+  }
+
+  @include mobile {
+    padding-block: var(--space-20);
+  }
+}
+
+/* 진료 분야 */
+.fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+
+  li {
+    padding: var(--space-4) var(--space-12);
+    border-radius: var(--radius-full);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 22px;
+    color: var(--color-primary);
+    background: var(--color-primary-soft);
+  }
+}
+
+/* 학력 · 경력, 학회 활동 */
+.list {
+  li + li {
+    margin-top: var(--space-4);
+  }
+}
+
+/* ---------- 진료 일정표 ---------- */
+
+.schedule {
+  width: 100%;
+  max-width: 480px;
+  border-collapse: collapse;
+  table-layout: fixed; /* 요일 칸의 폭을 똑같이 */
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+
+  th,
+  td {
+    height: 44px;
+    padding: 0 var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  thead th {
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  /* 맨 왼쪽 칸: 오전 · 오후 */
+  tbody th,
+  thead td {
+    width: 48px;
+    font-weight: 500;
+    text-align: left;
+    color: var(--color-text-muted);
+  }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+}
+
+/* 진료하는 칸: 남색 점 */
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+}
+
+.off {
+  color: var(--color-text-subtle);
+}
+
+.note {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-accent);
+}
+
+.scheduleNote {
+  margin-top: var(--space-12);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--color-text-muted);
+}

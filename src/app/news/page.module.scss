@@ -1,0 +1,108 @@
+@use "@/styles/mixins" as *;
+
+/* 움직임에 공통으로 쓰는 속도 곡선: 빠르게 출발해서 천천히 멈춤 */
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+/* 기기에서 "동작 줄이기"를 켜지 않았을 때만 움직임 적용 */
+@mixin motion {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+.eyebrow {
+  @include eyebrow;
+}
+
+/* ---------- 페이지 제목 ---------- */
+
+.hero {
+  padding: var(--space-64) var(--gutter) 0;
+
+  @include mobile {
+    padding-top: var(--space-40);
+  }
+}
+
+/* 왼쪽에 제목, 오른쪽 아래에 설명 */
+.heroInner {
+  @include container;
+  display: flex;
+  flex-wrap: wrap; /* 설명이 들어갈 자리가 부족하면 아랫줄로 내려감 */
+  gap: var(--space-20) 56px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: var(--space-48);
+  border-bottom: 1px solid var(--color-text-strong);
+
+  @include mobile {
+    padding-bottom: var(--space-32);
+  }
+}
+
+/* 글자가 아래에서 올라오는 줄: 바깥(.line)이 가림막, 안쪽 span이 움직임 */
+.line {
+  display: block;
+  overflow: hidden;
+
+  > span {
+    display: block;
+  }
+}
+
+.title {
+  margin-top: var(--space-20);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-strong);
+  word-break: keep-all;
+
+  @include tablet {
+    font-size: 40px;
+  }
+
+  @include mobile {
+    margin-top: var(--space-16);
+    font-size: 28px;
+  }
+}
+
+.lead {
+  @include body;
+  flex: 1 1 320px; /* 최소 320px은 있어야 제목 옆에 놓임 */
+  max-width: 420px;
+  padding-bottom: var(--space-8); /* 제목 마지막 줄의 글자 밑선과 높이를 맞춤 */
+
+  @include mobile {
+    padding-bottom: 0;
+  }
+}
+
+/* 페이지가 열릴 때 한 번: 제목이 한 줄씩 올라옴 */
+@include motion {
+  .title .line > span {
+    animation: rise 0.9s $ease both;
+  }
+
+  .title .line:nth-child(2) > span {
+    animation-delay: 0.12s;
+  }
+
+  .hero .eyebrow,
+  .lead {
+    animation: fade 0.8s ease 0.5s both;
+  }
+}
+
+@keyframes rise {
+  from {
+    translate: 0 105%;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}

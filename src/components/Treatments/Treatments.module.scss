@@ -1,0 +1,272 @@
+@use "@/styles/mixins" as *;
+
+.section {
+  @include section;
+  background: var(--color-bg-subtle);
+}
+
+.inner {
+  @include container;
+}
+
+/* ---------- 카테고리 탭 ---------- */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-20);
+  justify-content: center;
+  margin-top: var(--space-48);
+
+  /* 모바일: 줄바꿈 대신 가로로 밀어서 보기 */
+  @include mobile {
+    flex-wrap: nowrap;
+    gap: var(--space-16);
+    justify-content: flex-start;
+    margin-top: var(--space-32);
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scrollbar-width: none; /* 스크롤바 숨김 */
+  }
+}
+
+.tab {
+  padding: 10px 6px;
+  border-bottom: 2px solid transparent;
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-text-subtle);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+
+  @include hover {
+    color: var(--color-text);
+  }
+
+  &.active {
+    border-color: var(--color-primary);
+    color: var(--color-text-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+/* ---------- 카드 목록 (가로 스크롤) ---------- */
+
+.track {
+  --per-view: 5; /* 한 화면에 보이는 카드 수 */
+  --gap: 20px;
+
+  display: grid;
+  grid-auto-flow: column; /* 카드를 가로 한 줄로 */
+  grid-auto-columns: calc(
+    (100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view)
+  );
+  gap: var(--gap);
+  margin-top: 36px;
+  /* 화면 양끝까지 스크롤되도록 섹션 여백만큼 바깥으로 확장 */
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory; /* 카드 단위로 딱 맞춰 멈춤 */
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+  animation: fade-in 0.3s ease;
+
+  @media (max-width: 1399px) {
+    --per-view: 4;
+  }
+
+  @include tablet {
+    --per-view: 3;
+  }
+
+  @include mobile {
+    --per-view: 1.35; /* 다음 카드가 살짝 보여서 넘길 수 있음을 알림 */
+    --gap: 12px;
+
+    margin-top: var(--space-24);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.item {
+  scroll-snap-align: start;
+}
+
+.card {
+  position: relative;
+  z-index: 0; /* 아래 ::before가 카드 배경과 글자 사이에 놓이게 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 320px;
+  padding: 30px var(--space-24);
+  border-radius: 50px 0; /* 왼쪽 위·오른쪽 아래만 둥글게 */
+  overflow: hidden;
+  color: #fff;
+  /* --tone 값(R G B)은 Treatments.tsx에서 카드마다 넣어줌 */
+  background: linear-gradient(
+    120deg,
+    rgb(var(--tone) / 0.3),
+    rgb(var(--tone))
+  );
+  transition: border-radius 0.3s ease;
+
+  /* 원색 배경 레이어 — 평소에는 투명 */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(var(--tone));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* hover: 모서리를 각지게, 원색 레이어를 드러냄 */
+  @include hover {
+    border-radius: 0;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  /* 키보드로 이동했을 때도 같은 모습 + 외곽선 */
+  &:focus-visible {
+    border-radius: 0;
+outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  /* 마우스가 있는 기기에서는 기본 커서를 숨기고 VIEW 커서를 대신 보여줌 */
+  @media (hover: hover) and (pointer: fine) {
+    cursor: none;
+  }
+
+  @include mobile {
+    height: 300px;
+  }
+}
+
+.cardEn {
+  font-family: var(--font-display);
+  font-size: 44px;
+  line-height: 1.25;
+  text-transform: uppercase;
+
+  @include tablet {
+    font-size: 40px;
+  }
+}
+
+.cardName {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.cardDesc {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+/* ---------- 좌우 버튼 ---------- */
+
+.nav {
+  display: flex;
+  gap: var(--space-16);
+  justify-content: center;
+  margin-top: var(--space-40);
+
+  @include mobile {
+    margin-top: var(--space-24);
+  }
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+
+  @include hover {
+    color: var(--color-text-inverse);
+    background: var(--color-primary);
+  }
+
+  &:disabled {
+    color: var(--color-line);
+    background: var(--color-bg);
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* ---------- VIEW 커서 ---------- */
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(22, 26, 29, 0.16);
+  pointer-events: none; /* 커서가 클릭을 가로채지 않게 */
+  /* 마우스 좌표(--x, --y)로 이동. -50%는 원의 중심을 마우스 끝에 맞추는 보정 */
+  translate: calc(var(--x, 0px) - 50%) calc(var(--y, 0px) - 50%);
+  scale: 0;
+  opacity: 0;
+  transition:
+    scale 0.25s ease,
+    opacity 0.25s ease;
+
+  &[data-visible="true"] {
+    scale: 1;
+    opacity: 1;
+  }
+}

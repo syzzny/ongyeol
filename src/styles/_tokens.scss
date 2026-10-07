@@ -1,0 +1,84 @@
+:root {
+  /* color — background */
+  --color-bg: #ffffff;
+  --color-surface: #fdfbf8;
+  --color-bg-subtle: #f7f7f5;
+  --color-bg-dark: #161a1d;
+  --color-surface-warm: #f4f1ed;
+
+    /* color — brand */
+  --color-primary: #273843;
+  --color-primary-hover: #314956;
+  --color-primary-pressed: #1d2a32;
+  --color-primary-soft: #e6ecef;
+  --color-accent: #8a7568;
+
+  /* color — state */
+  --color-focus: #567c91;
+  --color-error: #b44848;
+  --color-disabled: #e8e9e7;
+
+  /* color — text */
+  --color-text-strong: #171a1d;
+  --color-text: #34383d;
+  --color-text-muted: #70757a;
+  --color-text-subtle: #9a9ea1;
+  --color-text-inverse: #f8f8f6;
+  --color-text-inverse-muted: #d1dadd;
+  --color-text-inverse-subtle: #aebbc1;
+
+  /* color — line */
+  --color-border: #e8e0d8;
+  --color-line: #d8dad8;
+  --color-line-dark: #3f4649;
+
+  /* spacing */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+
+  /* radius */
+  --radius-2: 2px;
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-full: 999px;
+
+  /* font */
+  --font-base: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
+  --font-display: var(--font-bebas), sans-serif;
+
+  /* layout — 반응형에서 값이 바뀌는 토큰 */
+  --container-max: 1248px;
+  --header-height: 72px;
+  --gutter: 96px;
+  --section-y: 96px;
+  --fs-title: 40px;
+}
+
+@media (max-width: 1199px) {
+  :root {
+    --gutter: 40px;
+    --section-y: 80px;
+    --fs-title: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-height: 60px;
+    --gutter: 20px;
+    --section-y: 64px;
+    --fs-title: 26px;
+  }
+}
